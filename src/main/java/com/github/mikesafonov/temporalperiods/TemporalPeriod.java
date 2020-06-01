@@ -95,7 +95,7 @@ public interface TemporalPeriod<T extends Temporal & Comparable<? super T>> {
      * @param point the temporal point
      * @return true if this period contains specified temporal point
      */
-    boolean contains(T point);
+    boolean contains(@NotNull T point);
 
     /**
      * Checks if this period`s start or end is equals to specified temporal point
@@ -113,7 +113,7 @@ public interface TemporalPeriod<T extends Temporal & Comparable<? super T>> {
      * @param point the temporal point
      * @return true if this period`s start or end is equals to specified temporal point
      */
-    default boolean isAtBorders(T point) {
+    default boolean isAtBorders(@NotNull T point) {
         return getFrom().equals(point) || getTo().equals(point);
     }
 
@@ -134,7 +134,7 @@ public interface TemporalPeriod<T extends Temporal & Comparable<? super T>> {
      * @param other the other period
      * @return true if this period intersect the specified period
      */
-    default boolean isIntersect(TemporalPeriod<T> other) {
+    default boolean isIntersect(@NotNull TemporalPeriod<T> other) {
         return !this.isAfter(other) && !this.isBefore(other);
     }
 
@@ -159,7 +159,7 @@ public interface TemporalPeriod<T extends Temporal & Comparable<? super T>> {
      * @param other the other period
      * @return true if this period sequentially with the specified period
      */
-    boolean isSequentiallyWith(TemporalPeriod<T> other);
+    boolean isSequentiallyWith(@NotNull TemporalPeriod<T> other);
 
     /**
      * Checks if this period sequentially with the specified period with specified step.
@@ -178,7 +178,7 @@ public interface TemporalPeriod<T extends Temporal & Comparable<? super T>> {
      * @param step  temporal unit step
      * @return true if this period sequentially with the specified period
      */
-    default boolean isSequentiallyWith(TemporalPeriod<T> other, TemporalUnit step) {
+    default boolean isSequentiallyWith(@NotNull TemporalPeriod<T> other, @NotNull TemporalUnit step) {
         return getTo().plus(1, step).equals(other.getFrom()) ||
             getFrom().minus(1, step).equals(other.getTo());
     }
@@ -196,5 +196,6 @@ public interface TemporalPeriod<T extends Temporal & Comparable<? super T>> {
      * @param other the other period
      * @return new period from this and the other periods
      */
-    TemporalPeriod<T> combineWith(TemporalPeriod<T> other);
+    @NotNull
+    TemporalPeriod<T> combineWith(@NotNull TemporalPeriod<T> other);
 }
