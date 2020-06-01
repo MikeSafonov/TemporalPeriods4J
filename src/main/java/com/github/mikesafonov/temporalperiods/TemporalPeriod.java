@@ -1,7 +1,8 @@
 package com.github.mikesafonov.temporalperiods;
 
 import javax.validation.constraints.NotNull;
-import java.time.temporal.*;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAmount;
 
 /**
  * This is the base interface type for date, date-time and year-month periods.
@@ -113,5 +114,26 @@ public interface TemporalPeriod<T extends Temporal & Comparable<? super T>> {
      */
     default boolean isAtBorders(T point) {
         return getFrom().equals(point) || getTo().equals(point);
+    }
+
+    /**
+     * Checks if this period intersect the specified period.
+     * <p>
+     * This checks to see if this period intersect the other period.
+     * <pre>
+     *   DatePeriod a = DatePeriod.of(2020, 1, 1, 2020, 1, 30);
+     *   a.isIntersect(DatePeriod.of(2020, 1, 31, 2020, 2, 2)) == false
+     *   a.isIntersect(DatePeriod.of(2019, 1, 31, 2019, 2, 2)) == false
+     *   a.isIntersect(a) == true
+     *   a.isIntersect(DatePeriod.of(2020, 1, 20, 2020, 2, 2)) == true
+     *   a.isIntersect(DatePeriod.of(2019, 1, 20, 2020, 1, 2)) == true
+     * </pre>
+     * <p>
+     *
+     * @param other the other period
+     * @return true if this period intersect the specified period
+     */
+    default boolean isIntersect(TemporalPeriod<T> other) {
+        return !this.isAfter(other) && !this.isBefore(other);
     }
 }

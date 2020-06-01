@@ -282,5 +282,41 @@ public class DatePeriodTest {
         }
     }
 
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class IsIntersect {
+
+        private Stream<Arguments> datePeriodsProvider() {
+            return Stream.of(
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 31),
+                    DatePeriod.of(2019, 1, 1, 2019, 1, 31),
+                    false),
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 31),
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 20),
+                    true),
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 31),
+                    DatePeriod.of(2019, 1, 1, 2020, 1, 20),
+                    true),
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 31),
+                    DatePeriod.of(2019, 1, 1, 2020, 2, 20),
+                    true),
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 31),
+                    DatePeriod.of(2021, 1, 1, 2021, 2, 20),
+                    false)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("datePeriodsProvider")
+        void shouldReturnExpected(DatePeriod one, DatePeriod two, boolean expected) {
+            assertEquals(expected, one.isIntersect(two));
+            assertEquals(expected, two.isIntersect(one));
+        }
+    }
 
 }

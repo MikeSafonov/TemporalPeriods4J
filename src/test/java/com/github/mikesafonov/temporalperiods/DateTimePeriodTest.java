@@ -333,4 +333,70 @@ public class DateTimePeriodTest {
     }
 
 
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class IsIntersect {
+
+        private Stream<Arguments> datePeriodsProvider() {
+            return Stream.of(
+                Arguments.of(
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2020, 1, 31, 0, 0, 0)
+                    ),
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2019, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2019, 1, 31, 0, 0, 0)
+                    ),
+                    false),
+                Arguments.of(
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2020, 1, 31, 0, 0, 0)
+                    ),
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2020, 1, 20, 0, 0, 0)
+                    ),
+                    true),
+                Arguments.of(
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2020, 1, 31, 0, 0, 0)
+                    ),
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2019, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2020, 1, 20, 0, 0, 0)
+                    ),
+                    true),
+                Arguments.of(
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2020, 1, 31, 0, 0, 0)
+                    ),
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2019, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2020, 2, 20, 0, 0, 0)
+                    ),
+                    true),
+                Arguments.of(
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2020, 1, 31, 0, 0, 0)
+                    ),
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2021, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2021, 2, 20, 0, 0, 0)
+                    ),
+                    false)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("datePeriodsProvider")
+        void shouldReturnExpected(DateTimePeriod one, DateTimePeriod two, boolean expected) {
+            assertEquals(expected, one.isIntersect(two));
+            assertEquals(expected, two.isIntersect(one));
+        }
+    }
 }
