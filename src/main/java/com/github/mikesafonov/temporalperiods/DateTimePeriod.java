@@ -7,6 +7,7 @@ import lombok.ToString;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * {@link TemporalPeriod} implementation with {@link LocalDateTime}
@@ -24,6 +25,20 @@ public final class DateTimePeriod implements TemporalPeriod<LocalDateTime> {
     public static DateTimePeriod of(LocalDateTime from, LocalDateTime to) {
         return new DateTimePeriod(
             from, to
+        );
+    }
+
+    public static DateTimePeriod from(DatePeriod period, LocalTime time){
+        return of(
+            period.getFrom().atTime(time),
+            period.getTo().atTime(time)
+        );
+    }
+
+    public static DateTimePeriod from(DatePeriod period){
+        return of(
+            period.getFrom().atStartOfDay(),
+            period.getTo().atStartOfDay()
         );
     }
 

@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.stream.Stream;
 
@@ -43,6 +44,27 @@ public class DatePeriodTest {
 
             assertEquals(from, period.getFrom());
             assertEquals(to, period.getTo());
+        }
+
+        @Test
+        void shouldCreateFromLocalDateTime() {
+            LocalDateTime from = LocalDateTime.of(2020, 1, 1, 0, 0, 0);
+            LocalDateTime to = LocalDateTime.of(2020, 1, 2, 0, 0, 0);
+
+            DatePeriod period = DatePeriod.from(from, to);
+            assertEquals(LocalDate.of(2020, 1, 1), period.getFrom());
+            assertEquals(LocalDate.of(2020, 1, 2), period.getTo());
+        }
+
+        @Test
+        void shouldCreateFromDateTimePeriod() {
+            DateTimePeriod timePeriod = DateTimePeriod.of(
+                LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                LocalDateTime.of(2020, 1, 2, 0, 0, 0)
+            );
+            DatePeriod period = DatePeriod.from(timePeriod);
+            assertEquals(LocalDate.of(2020, 1, 1), period.getFrom());
+            assertEquals(LocalDate.of(2020, 1, 2), period.getTo());
         }
     }
 

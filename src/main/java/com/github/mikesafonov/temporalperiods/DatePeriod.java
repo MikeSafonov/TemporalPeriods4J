@@ -6,6 +6,7 @@ import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 
 /**
@@ -31,6 +32,20 @@ public final class DatePeriod implements TemporalPeriod<LocalDate> {
         return of(
             LocalDate.of(yearFrom, monthFrom, dayFrom),
             LocalDate.of(yearTo, monthTo, dayTo)
+        );
+    }
+
+    public static DatePeriod from(LocalDateTime from, LocalDateTime to){
+        return of(
+            from.toLocalDate(),
+            to.toLocalDate()
+        );
+    }
+
+    public static DatePeriod from(DateTimePeriod dateTimePeriod){
+        return from(
+            dateTimePeriod.getFrom(),
+            dateTimePeriod.getTo()
         );
     }
 
