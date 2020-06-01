@@ -153,7 +153,7 @@ public interface TemporalPeriod<T extends Temporal & Comparable<? super T>> {
      *   a.isSequentiallyWith(DatePeriod.of(2019, 1, 20, 2020, 1, 2)) == false
      * </pre>
      * <p>
-     *
+     * <p>
      * Default step is depends on implementation.
      *
      * @param other the other period
@@ -175,11 +175,26 @@ public interface TemporalPeriod<T extends Temporal & Comparable<? super T>> {
      * <p>
      *
      * @param other the other period
-     * @param step temporal unit step
+     * @param step  temporal unit step
      * @return true if this period sequentially with the specified period
      */
-    default boolean isSequentiallyWith(TemporalPeriod<T> other, TemporalUnit step){
+    default boolean isSequentiallyWith(TemporalPeriod<T> other, TemporalUnit step) {
         return getTo().plus(1, step).equals(other.getFrom()) ||
             getFrom().minus(1, step).equals(other.getTo());
     }
+
+    /**
+     * Creates new period from {@code min(this.from, other.from)} to {@code max(this.to, other.to)}
+     * <p>
+     * Examples:
+     * <pre>
+     *     DatePeriod.of(2020, 1, 1, 2020, 1, 30).combineWith(DatePeriod.of(2019, 1, 1, 2020, 1, 20)) ==
+     *      2019-01-01 -- 2020-01-30
+     * </pre>
+     * <p>
+     *
+     * @param other the other period
+     * @return new period from this and the other periods
+     */
+    TemporalPeriod<T> combineWith(TemporalPeriod<T> other);
 }

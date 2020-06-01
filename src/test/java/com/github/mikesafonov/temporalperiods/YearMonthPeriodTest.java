@@ -422,4 +422,45 @@ public class YearMonthPeriodTest {
         }
     }
 
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class CombineWith {
+
+        private Stream<Arguments> datePeriodsProvider() {
+            return Stream.of(
+                Arguments.of(
+                    YearMonthPeriod.of(2020, 1, 2020, 1),
+                    YearMonthPeriod.of(2019, 1, 2019, 1),
+                    YearMonthPeriod.of(2019, 1, 2020, 1)
+                ),
+                Arguments.of(
+                    YearMonthPeriod.of(2020, 1, 2020, 1),
+                    YearMonthPeriod.of(2020, 1, 2020, 1),
+                    YearMonthPeriod.of(2020, 1, 2020, 1)
+                ),
+                Arguments.of(
+                    YearMonthPeriod.of(2020, 12, 2021, 1),
+                    YearMonthPeriod.of(2019, 1, 2019, 12),
+                    YearMonthPeriod.of(2019, 1, 2021, 1)
+                ),
+                Arguments.of(
+                    YearMonthPeriod.of(2020, 1, 2020, 1),
+                    YearMonthPeriod.of(2020, 2, 2020, 3),
+                    YearMonthPeriod.of(2020, 1, 2020, 3)
+                ),
+                Arguments.of(
+                    YearMonthPeriod.of(2020, 1, 2020, 1),
+                    YearMonthPeriod.of(2021, 1, 2021, 2),
+                    YearMonthPeriod.of(2020, 1, 2021, 2)
+                )
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("datePeriodsProvider")
+        void shouldReturnExpected(YearMonthPeriod one, YearMonthPeriod two, YearMonthPeriod expected) {
+            assertEquals(expected, one.combineWith(two));
+            assertEquals(expected, two.combineWith(one));
+        }
+    }
 }

@@ -114,4 +114,14 @@ public final class DatePeriod implements TemporalPeriod<LocalDate> {
     public boolean isSequentiallyWith(TemporalPeriod<LocalDate> other) {
         return isSequentiallyWith(other, ChronoUnit.DAYS);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public TemporalPeriod<LocalDate> combineWith(TemporalPeriod<LocalDate> other) {
+        LocalDate newFrom = from.isBefore(other.getFrom()) ? from : other.getFrom();
+        LocalDate newTo = to.isAfter(other.getTo()) ? to : other.getTo();
+        return DatePeriod.of(newFrom, newTo);
+    }
 }

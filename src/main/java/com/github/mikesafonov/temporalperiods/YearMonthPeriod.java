@@ -130,4 +130,14 @@ public final class YearMonthPeriod implements TemporalPeriod<YearMonth> {
     public boolean isSequentiallyWith(TemporalPeriod<YearMonth> other) {
         return isSequentiallyWith(other, ChronoUnit.MONTHS);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public TemporalPeriod<YearMonth> combineWith(TemporalPeriod<YearMonth> other) {
+        YearMonth newFrom = from.isBefore(other.getFrom()) ? from : other.getFrom();
+        YearMonth newTo = to.isAfter(other.getTo()) ? to : other.getTo();
+        return YearMonthPeriod.of(newFrom, newTo);
+    }
 }

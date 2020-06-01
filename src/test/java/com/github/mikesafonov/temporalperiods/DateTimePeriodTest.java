@@ -519,4 +519,77 @@ public class DateTimePeriodTest {
             assertEquals(expected, two.isSequentiallyWith(one, step));
         }
     }
+
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class CombineWith {
+
+        private Stream<Arguments> datePeriodsProvider() {
+            return Stream.of(
+                Arguments.of(
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2020, 1, 31, 0, 0, 0)
+                    ),
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2019, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2019, 1, 31, 0, 0, 0)
+                    ),
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2019, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2020, 1, 31, 0, 0, 0)
+                    )
+                ),
+                Arguments.of(
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2020, 1, 31, 0, 0, 0)
+                    ),
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2020, 1, 31, 0, 1, 0),
+                        LocalDateTime.of(2020, 2, 20, 0, 0, 0)
+                    ),
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2020, 2, 20, 0, 0, 0)
+                    )
+                ),
+                Arguments.of(
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2020, 1, 31, 0, 0, 0)
+                    ),
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2019, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2019, 12, 31, 23, 59, 0)
+                    ),
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2019, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2020, 1, 31, 0, 0, 0)
+                    )
+                ),
+                Arguments.of(
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2020, 1, 31, 0, 0, 0)
+                    ),
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2021, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2021, 2, 20, 0, 0, 0)
+                    ),
+                    DateTimePeriod.of(
+                        LocalDateTime.of(2020, 1, 1, 0, 0, 0),
+                        LocalDateTime.of(2021, 2, 20, 0, 0, 0)
+                    )
+                )
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("datePeriodsProvider")
+        void shouldReturnExpected(DateTimePeriod one, DateTimePeriod two, DateTimePeriod expected) {
+            assertEquals(expected, one.combineWith(two));
+            assertEquals(expected, two.combineWith(one));
+        }
+    }
 }
