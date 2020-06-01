@@ -1,0 +1,66 @@
+plugins {
+    id "java"
+    id "jacoco"
+    id 'info.solidsoft.pitest' version '1.5.1'
+}
+
+apply plugin: "java-library"
+apply plugin: "maven"
+
+
+group "com.github.mikesafonov"
+version "0.0.1"
+
+sourceCompatibility = 1.8
+[compileJava, compileTestJava]*.options*.encoding = "UTF-8"
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    enabled = true
+}
+
+task sourceJar(type: Jar) {
+    classifier "sources"
+    from sourceSets.main.allJava
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier "javadoc"
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourceJar
+    archives javadocJar
+}
+
+jacoco {
+    toolVersion = "0.8.3"
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        csv.enabled false
+    }
+}
+
+
+pitest {
+    junit5PluginVersion = '0.12'
+    targetClasses = ["com.github.mikesafonov.temporalperiods.*"]
+    threads = 4
+    outputFormats = ["HTML", "XML"]
+    enableDefaultIncrementalAnalysis = true
+    timestampedReports = false
+    historyInputLocation = ".pitest/pitHistory.txt"
+    historyOutputLocation = ".pitest/pitHistory.txt"
+}
