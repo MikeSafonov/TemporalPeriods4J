@@ -3,6 +3,7 @@ package com.github.mikesafonov.temporalperiods;
 import javax.validation.constraints.NotNull;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
 
 /**
  * This is the base interface type for date, date-time and year-month periods.
@@ -135,5 +136,50 @@ public interface TemporalPeriod<T extends Temporal & Comparable<? super T>> {
      */
     default boolean isIntersect(TemporalPeriod<T> other) {
         return !this.isAfter(other) && !this.isBefore(other);
+    }
+
+    /**
+     * Checks if this period sequentially with the specified period (with default step).
+     * <p>
+     * This checks to see if this period sequentially with the other period.
+     * <pre>
+     *   DatePeriod a = DatePeriod.of(2020, 1, 1, 2020, 1, 30);
+     *   a.isSequentiallyWith(DatePeriod.of(2019, 1, 1, 2019, 12, 31)) == true
+     *   a.isSequentiallyWith(DatePeriod.of(2020, 1, 31, 2020, 2, 2)) == true
+     *   DatePeriod.of(2020, 1, 31, 2020, 2, 2).isSequentiallyWith(a) == true
+     *   a.isSequentiallyWith(DatePeriod.of(2019, 1, 31, 2019, 2, 2)) == false
+     *   a.isSequentiallyWith(a) == false
+     *   a.isSequentiallyWith(DatePeriod.of(2020, 1, 20, 2020, 2, 2)) == false
+     *   a.isSequentiallyWith(DatePeriod.of(2019, 1, 20, 2020, 1, 2)) == false
+     * </pre>
+     * <p>
+     *
+     * Default step is depends on implementation.
+     *
+     * @param other the other period
+     * @return true if this period sequentially with the specified period
+     */
+    boolean isSequentiallyWith(TemporalPeriod<T> other);
+
+    /**
+     * Checks if this period sequentially with the specified period with specified step.
+     * <p>
+     * This checks to see if this period sequentially with the other period.
+     * <pre>
+     *   DatePeriod a = DatePeriod.of(2020, 1, 1, 2020, 1, 30);
+     *   a.isSequentiallyWith(DatePeriod.of(2019, 1, 1, 2019, 12, 31), ChronoUnit.DAYS) == true
+     *   a.isSequentiallyWith(DatePeriod.of(2020, 1, 31, 2020, 2, 2), ChronoUnit.DAYS) == true
+     *   DatePeriod.of(2020, 1, 31, 2020, 2, 2).isSequentiallyWith(a, ChronoUnit.DAYS) == true
+     *   DatePeriod.of(2020, 1, 31, 2020, 2, 2).isSequentiallyWith(a, ChronoUnit.MONTHS) == false
+     * </pre>
+     * <p>
+     *
+     * @param other the other period
+     * @param step temporal unit step
+     * @return true if this period sequentially with the specified period
+     */
+    default boolean isSequentiallyWith(TemporalPeriod<T> other, TemporalUnit step){
+        return getTo().plus(1, step).equals(other.getFrom()) ||
+            getFrom().minus(1, step).equals(other.getTo());
     }
 }

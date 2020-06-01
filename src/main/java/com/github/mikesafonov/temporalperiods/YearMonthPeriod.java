@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 
 /**
  * {@link TemporalPeriod} implementation with {@link YearMonth}
@@ -119,5 +120,14 @@ public final class YearMonthPeriod implements TemporalPeriod<YearMonth> {
     @Override
     public boolean contains(YearMonth point) {
         return !from.isAfter(point) && !to.isBefore(point);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p></p>Default step is {@link ChronoUnit#MONTHS}
+     */
+    @Override
+    public boolean isSequentiallyWith(TemporalPeriod<YearMonth> other) {
+        return isSequentiallyWith(other, ChronoUnit.MONTHS);
     }
 }

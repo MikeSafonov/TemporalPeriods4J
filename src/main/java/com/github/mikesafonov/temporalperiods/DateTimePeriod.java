@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 
 /**
  * {@link TemporalPeriod} implementation with {@link LocalDateTime}
@@ -96,5 +97,14 @@ public final class DateTimePeriod implements TemporalPeriod<LocalDateTime> {
     @Override
     public boolean contains(LocalDateTime point) {
         return !from.isAfter(point) && !to.isBefore(point);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p></p>Default step is {@link ChronoUnit#SECONDS}
+     */
+    @Override
+    public boolean isSequentiallyWith(TemporalPeriod<LocalDateTime> other) {
+        return isSequentiallyWith(other, ChronoUnit.SECONDS);
     }
 }

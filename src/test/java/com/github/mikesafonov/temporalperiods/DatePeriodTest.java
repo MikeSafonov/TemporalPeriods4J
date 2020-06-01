@@ -10,6 +10,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -316,6 +318,85 @@ public class DatePeriodTest {
         void shouldReturnExpected(DatePeriod one, DatePeriod two, boolean expected) {
             assertEquals(expected, one.isIntersect(two));
             assertEquals(expected, two.isIntersect(one));
+        }
+    }
+
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class IsSequentiallyWithDefault {
+
+        private Stream<Arguments> datePeriodsProvider() {
+            return Stream.of(
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 31),
+                    DatePeriod.of(2019, 1, 1, 2019, 12, 31),
+                    true),
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 31),
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 20),
+                    false),
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 31),
+                    DatePeriod.of(2019, 1, 1, 2020, 1, 20),
+                    false),
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 31),
+                    DatePeriod.of(2019, 1, 1, 2020, 2, 20),
+                    false),
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 31),
+                    DatePeriod.of(2021, 1, 1, 2021, 2, 20),
+                    false)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("datePeriodsProvider")
+        void shouldReturnExpected(DatePeriod one, DatePeriod two, boolean expected) {
+            assertEquals(expected, one.isSequentiallyWith(two));
+            assertEquals(expected, two.isSequentiallyWith(one));
+        }
+    }
+
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class IsSequentiallyWith {
+
+        private Stream<Arguments> datePeriodsProvider() {
+            return Stream.of(
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 31),
+                    DatePeriod.of(2019, 1, 1, 2019, 12, 31),
+                    ChronoUnit.MONTHS,
+                    false),
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 31),
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 20),
+                    ChronoUnit.MONTHS,
+                    false),
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 31),
+                    DatePeriod.of(2019, 1, 1, 2020, 1, 20),
+                    ChronoUnit.MONTHS,
+                    false),
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 31),
+                    DatePeriod.of(2019, 1, 1, 2020, 2, 20),
+                    ChronoUnit.MONTHS,
+                    false),
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 31),
+                    DatePeriod.of(2021, 1, 31, 2021, 2, 20),
+                    ChronoUnit.YEARS,
+                    true)
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("datePeriodsProvider")
+        void shouldReturnExpected(DatePeriod one, DatePeriod two, TemporalUnit step, boolean expected) {
+            assertEquals(expected, one.isSequentiallyWith(two, step));
+            assertEquals(expected, two.isSequentiallyWith(one, step));
         }
     }
 
