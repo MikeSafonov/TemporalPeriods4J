@@ -198,4 +198,34 @@ public interface TemporalPeriod<T extends Temporal & Comparable<? super T>> {
      */
     @NotNull
     TemporalPeriod<T> combineWith(@NotNull TemporalPeriod<T> other);
+
+    /**
+     * Splits this period around specified point.
+     * <p></p>
+     * Split date period '2020-01-01 -- 2020-01-31' :
+     *
+     * <table >
+     *   <tr>
+     *     <td> point </td>  <td> result </td>
+     *   </tr>
+     *   <tr>
+     *     <td> 2020-01-01 </td>  <td> {2020-01-01 -- 2020-01-31}</td>
+     *   </tr>
+     *   <tr>
+     *     <td> 2020-01-31 </td>  <td> {2020-01-01 -- 2020-01-30, 2020-01-31 -- 2020-01-31}</td>
+     *   </tr>
+     *   <tr>
+     *     <td> 2020-01-10 </td>  <td> {2020-01-01 -- 2020-01-09, 2020-01-10 -- 2020-01-31}</td>
+     *   </tr>
+     *   <tr>
+     *     <td> 2020-02-01 </td>  <td> {2020-01-01 -- 2020-01-31}</td>
+     *   </tr>
+     * </table>
+     *
+     * @param point the temporal splitting point
+     * @return the array of periods computed by splitting this period by specified point
+     */
+    @NotNull
+    TemporalPeriod<T>[] split(@NotNull T point);
+
 }

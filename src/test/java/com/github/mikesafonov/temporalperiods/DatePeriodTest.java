@@ -14,6 +14,7 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -439,6 +440,50 @@ public class DatePeriodTest {
         void shouldReturnExpected(DatePeriod one, DatePeriod two, DatePeriod expected) {
             assertEquals(expected, one.combineWith(two));
             assertEquals(expected, two.combineWith(one));
+        }
+    }
+
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class Split {
+
+        private DatePeriod period = DatePeriod.of(2020, 1, 1, 2020, 1, 31);
+
+        private Stream<Arguments> datePeriodsProvider() {
+            return Stream.of(
+                Arguments.of(
+                    LocalDate.of(2020, 1, 1),
+                    new DatePeriod[]{period}
+                ),
+                Arguments.of(
+                    LocalDate.of(2020, 1, 31),
+                    new DatePeriod[]{
+                        DatePeriod.of(2020, 1, 1, 2020, 1, 30),
+                        DatePeriod.of(2020, 1, 31, 2020, 1, 31)
+                    }
+                ),
+                Arguments.of(
+                    LocalDate.of(2020, 1, 10),
+                    new DatePeriod[]{
+                        DatePeriod.of(2020, 1, 1, 2020, 1, 9),
+                        DatePeriod.of(2020, 1, 10, 2020, 1, 31)
+                    }
+                ),
+                Arguments.of(
+                    LocalDate.of(2020, 2, 1),
+                    new DatePeriod[]{period}
+                ),
+                Arguments.of(
+                    LocalDate.of(2019, 12, 31),
+                    new DatePeriod[]{period}
+                )
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("datePeriodsProvider")
+        void shouldReturnExpected(LocalDate point, DatePeriod[] expected) {
+            assertThat(period.split(point)).containsOnly(expected);
         }
     }
 

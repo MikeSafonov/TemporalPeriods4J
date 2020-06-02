@@ -124,4 +124,18 @@ public final class DatePeriod implements TemporalPeriod<LocalDate> {
         LocalDate newTo = to.isAfter(other.getTo()) ? to : other.getTo();
         return DatePeriod.of(newFrom, newTo);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public DatePeriod[] split(LocalDate point) {
+        if ((from.isBefore(point) && to.isAfter(point)) || to.equals(point)) {
+            return new DatePeriod[]{
+                DatePeriod.of(from, point.minus(1, ChronoUnit.DAYS)),
+                DatePeriod.of(point, to)
+            };
+        }
+        return new DatePeriod[]{this};
+    }
 }

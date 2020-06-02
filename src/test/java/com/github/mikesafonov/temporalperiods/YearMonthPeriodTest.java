@@ -15,6 +15,7 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -461,6 +462,50 @@ public class YearMonthPeriodTest {
         void shouldReturnExpected(YearMonthPeriod one, YearMonthPeriod two, YearMonthPeriod expected) {
             assertEquals(expected, one.combineWith(two));
             assertEquals(expected, two.combineWith(one));
+        }
+    }
+
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class Split {
+
+        private YearMonthPeriod period = YearMonthPeriod.of(2020, 1,  2020, 3);
+
+        private Stream<Arguments> datePeriodsProvider() {
+            return Stream.of(
+                Arguments.of(
+                    YearMonth.of(2020, 1),
+                    new YearMonthPeriod[]{period}
+                ),
+                Arguments.of(
+                    YearMonth.of(2020, 3),
+                    new YearMonthPeriod[]{
+                        YearMonthPeriod.of(2020, 1, 2020, 2),
+                        YearMonthPeriod.of(2020, 3, 2020, 3)
+                    }
+                ),
+                Arguments.of(
+                    YearMonth.of(2020, 2),
+                    new YearMonthPeriod[]{
+                        YearMonthPeriod.of(2020, 1,  2020, 1),
+                        YearMonthPeriod.of(2020, 2, 2020, 3)
+                    }
+                ),
+                Arguments.of(
+                    YearMonth.of(2020, 4),
+                    new YearMonthPeriod[]{period}
+                ),
+                Arguments.of(
+                    YearMonth.of(2019, 12),
+                    new YearMonthPeriod[]{period}
+                )
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("datePeriodsProvider")
+        void shouldReturnExpected(YearMonth point, YearMonthPeriod[] expected) {
+            assertThat(period.split(point)).containsOnly(expected);
         }
     }
 }

@@ -140,4 +140,18 @@ public final class YearMonthPeriod implements TemporalPeriod<YearMonth> {
         YearMonth newTo = to.isAfter(other.getTo()) ? to : other.getTo();
         return YearMonthPeriod.of(newFrom, newTo);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public TemporalPeriod<YearMonth>[] split(YearMonth point) {
+        if ((from.isBefore(point) && to.isAfter(point)) || to.equals(point)) {
+            return new YearMonthPeriod[]{
+                YearMonthPeriod.of(from, point.minus(1, ChronoUnit.MONTHS)),
+                YearMonthPeriod.of(point, to)
+            };
+        }
+        return new YearMonthPeriod[]{this};
+    }
 }
