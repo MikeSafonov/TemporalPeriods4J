@@ -108,7 +108,7 @@ public final class DatePeriod implements TemporalPeriod<LocalDate> {
 
     /**
      * {@inheritDoc}
-     * <p></p>Default step is {@link ChronoUnit#DAYS}
+     * Default step is {@link ChronoUnit#DAYS}
      */
     @Override
     public boolean isSequentiallyWith(TemporalPeriod<LocalDate> other) {

@@ -153,7 +153,6 @@ public interface TemporalPeriod<T extends Temporal & Comparable<? super T>> {
      *   a.isSequentiallyWith(DatePeriod.of(2019, 1, 20, 2020, 1, 2)) == false
      * </pre>
      * <p>
-     * <p>
      * Default step is depends on implementation.
      *
      * @param other the other period
@@ -205,6 +204,7 @@ public interface TemporalPeriod<T extends Temporal & Comparable<? super T>> {
      * Split date period '2020-01-01 -- 2020-01-31' :
      *
      * <table >
+     *     <caption>Examples</caption>
      *   <tr>
      *     <td> point </td>  <td> result </td>
      *   </tr>
