@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -487,4 +488,40 @@ public class DatePeriodTest {
         }
     }
 
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class IntersectionWith {
+
+        private Stream<Arguments> datePeriodsProvider() {
+            return Stream.of(
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 31),
+                    DatePeriod.of(2020, 1, 2, 2020, 1, 30),
+                    Optional.of(DatePeriod.of(2020, 1, 2, 2020, 1, 30))
+                ),
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 31),
+                    DatePeriod.of(2020, 1, 10, 2020, 2, 20),
+                    Optional.of(DatePeriod.of(2020, 1, 10, 2020, 1, 31))
+                ),
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 10, 2020, 1, 31),
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 10),
+                    Optional.of(DatePeriod.of(2020, 1, 10, 2020, 1, 10))
+                ),
+                Arguments.of(
+                    DatePeriod.of(2020, 1, 10, 2020, 1, 31),
+                    DatePeriod.of(2020, 1, 1, 2020, 1, 9),
+                    Optional.empty()
+                )
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("datePeriodsProvider")
+        void shouldReturnExpected(DatePeriod first, DatePeriod second, Optional<DatePeriod> expected) {
+            assertThat(first.intersectionWith(second)).isEqualTo(expected);
+            assertThat(second.intersectionWith(first)).isEqualTo(expected);
+        }
+    }
 }

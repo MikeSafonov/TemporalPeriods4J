@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 /**
  * {@link TemporalPeriod} implementation with {@link YearMonth}
@@ -153,5 +154,18 @@ public final class YearMonthPeriod implements TemporalPeriod<YearMonth> {
             };
         }
         return new YearMonthPeriod[]{this};
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<YearMonthPeriod> intersectionWith(@NotNull TemporalPeriod<YearMonth> other) {
+        if (isIntersect(other)) {
+            YearMonth intersectionFrom = contains(other.getFrom()) ? other.getFrom() : getFrom();
+            YearMonth intersectionTo = contains(other.getTo()) ? other.getTo() : getTo();
+            return Optional.of(YearMonthPeriod.of(intersectionFrom, intersectionTo));
+        }
+        return Optional.empty();
     }
 }

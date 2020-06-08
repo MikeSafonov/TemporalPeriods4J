@@ -4,6 +4,7 @@ import javax.validation.constraints.NotNull;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.time.temporal.TemporalUnit;
+import java.util.Optional;
 
 /**
  * This is the base interface type for date, date-time and year-month periods.
@@ -203,7 +204,7 @@ public interface TemporalPeriod<T extends Temporal & Comparable<? super T>> {
      * <p></p>
      * Split date period '2020-01-01 -- 2020-01-31' :
      *
-     * <table >
+     * <table border="2">
      *     <caption>Examples</caption>
      *   <tr>
      *     <td> point </td>  <td> result </td>
@@ -228,4 +229,39 @@ public interface TemporalPeriod<T extends Temporal & Comparable<? super T>> {
     @NotNull
     TemporalPeriod<T>[] split(@NotNull T point);
 
+    /**
+     * Creates new period of intersection of this period and the specified period.
+     *
+     * <table border="2">
+     *     <caption>Examples</caption>
+     *   <tr>
+     *     <td> first </td>  <td> second </td> <td> intersection period </td>
+     *   </tr>
+     *   <tr>
+     *     <td> 2020-01-01 -- 2020-01-31 </td>  <td> 2020-01-02 -- 2020-01-30 </td> <td> 2020-01-02 -- 2020-01-30 </td>
+     *   </tr>
+     *   <tr>
+     *     <td> 2020-01-02 -- 2020-01-30 </td>  <td> 2020-01-01 -- 2020-01-31 </td> <td> 2020-01-02 -- 2020-01-30 </td>
+     *   </tr>
+     *   <tr>
+     *     <td> 2020-01-01 -- 2020-01-31 </td>  <td> 2020-01-02 -- 2020-02-10 </td> <td> 2020-01-02 -- 2020-01-31 </td>
+     *   </tr>
+     *   <tr>
+     *     <td> 2020-01-10 -- 2020-01-31 </td>  <td> 2020-01-01 -- 2020-01-20 </td> <td> 2020-01-10 -- 2020-01-20 </td>
+     *   </tr>
+     *   <tr>
+     *     <td> 2020-01-10 -- 2020-01-31 </td>  <td> 2020-01-01 -- 2020-01-10 </td> <td> 2020-01-10 -- 2020-01-10 </td>
+     *   </tr>
+     *   <tr>
+     *     <td> 2020-01-10 -- 2020-01-31 </td>  <td> 2020-01-01 -- 2020-01-10 </td> <td> 2020-01-10 -- 2020-01-10 </td>
+     *   </tr>
+     *   <tr>
+     *     <td> 2020-01-10 -- 2020-01-31 </td>  <td> 2020-01-01 -- 2020-01-09 </td> <td> empty </td>
+     *   </tr>
+     * </table>
+     *
+     * @param other the other period
+     * @return intersection period otherwise {@link Optional#empty()}
+     */
+    Optional<? extends TemporalPeriod<T>> intersectionWith(@NotNull TemporalPeriod<T> other);
 }

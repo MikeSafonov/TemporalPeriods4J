@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 /**
  * {@link TemporalPeriod} implementation with {@link LocalDateTime}
@@ -130,5 +131,18 @@ public final class DateTimePeriod implements TemporalPeriod<LocalDateTime> {
             };
         }
         return new DateTimePeriod[]{this};
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Optional<DateTimePeriod> intersectionWith(@NotNull TemporalPeriod<LocalDateTime> other) {
+        if (isIntersect(other)) {
+            LocalDateTime intersectionFrom = contains(other.getFrom()) ? other.getFrom() : getFrom();
+            LocalDateTime intersectionTo = contains(other.getTo()) ? other.getTo() : getTo();
+            return Optional.of(DateTimePeriod.of(intersectionFrom, intersectionTo));
+        }
+        return Optional.empty();
     }
 }

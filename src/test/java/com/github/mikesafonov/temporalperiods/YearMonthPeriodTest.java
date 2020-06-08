@@ -13,6 +13,7 @@ import java.time.Period;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -469,7 +470,7 @@ public class YearMonthPeriodTest {
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     class Split {
 
-        private YearMonthPeriod period = YearMonthPeriod.of(2020, 1,  2020, 3);
+        private YearMonthPeriod period = YearMonthPeriod.of(2020, 1, 2020, 3);
 
         private Stream<Arguments> datePeriodsProvider() {
             return Stream.of(
@@ -487,7 +488,7 @@ public class YearMonthPeriodTest {
                 Arguments.of(
                     YearMonth.of(2020, 2),
                     new YearMonthPeriod[]{
-                        YearMonthPeriod.of(2020, 1,  2020, 1),
+                        YearMonthPeriod.of(2020, 1, 2020, 1),
                         YearMonthPeriod.of(2020, 2, 2020, 3)
                     }
                 ),
@@ -506,6 +507,44 @@ public class YearMonthPeriodTest {
         @MethodSource("datePeriodsProvider")
         void shouldReturnExpected(YearMonth point, YearMonthPeriod[] expected) {
             assertThat(period.split(point)).containsOnly(expected);
+        }
+    }
+
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    class IntersectionWith {
+
+        private Stream<Arguments> datePeriodsProvider() {
+            return Stream.of(
+                Arguments.of(
+                    YearMonthPeriod.of(2020, 1, 2020, 4),
+                    YearMonthPeriod.of(2020, 2, 2020, 3),
+                    Optional.of(YearMonthPeriod.of(2020, 2, 2020, 3))
+                ),
+                Arguments.of(
+                    YearMonthPeriod.of(2020, 1, 2020, 4),
+                    YearMonthPeriod.of(2020, 2, 2020, 5),
+                    Optional.of(YearMonthPeriod.of(2020, 2, 2020, 4))
+                ),
+                Arguments.of(
+                    YearMonthPeriod.of(2020, 1, 2020, 4),
+                    YearMonthPeriod.of(2020, 4, 2020, 5),
+                    Optional.of(YearMonthPeriod.of(2020, 4, 2020, 4))
+                ),
+
+                Arguments.of(
+                    YearMonthPeriod.of(2020, 1, 2020, 3),
+                    YearMonthPeriod.of(2020, 4, 2020, 5),
+                    Optional.empty()
+                )
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("datePeriodsProvider")
+        void shouldReturnExpected(YearMonthPeriod first, YearMonthPeriod second, Optional<YearMonthPeriod> expected) {
+            assertThat(first.intersectionWith(second)).isEqualTo(expected);
+            assertThat(second.intersectionWith(first)).isEqualTo(expected);
         }
     }
 }
