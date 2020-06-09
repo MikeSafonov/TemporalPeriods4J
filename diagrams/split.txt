@@ -1,0 +1,7 @@
+@startuml
+Project starts the 01th of may 2020
+[period] lasts 31 days and is colored in Lavender/LightBlue
+[point] starts 9 day after [period]`s start and lasts 1 day and is colored in yellow
+[spl1] starts 0 day after [period]`s start and lasts 9 days and is colored in red
+[spl2] starts 9 day after [period]`s start and lasts 22 days and is colored in red
+@enduml

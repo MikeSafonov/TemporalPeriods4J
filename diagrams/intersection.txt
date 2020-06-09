@@ -1,0 +1,6 @@
+@startuml
+Project starts the 01th of may 2020
+[one] lasts 20 days and is colored in Lavender/LightBlue
+[two] starts 10 day after [one]`s start and lasts 15 days and is colored in yellow
+[intersection] starts 0 day after [two]`s start and ends 0 day after [one]`s end and is colored in red
+@enduml

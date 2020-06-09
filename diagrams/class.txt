@@ -1,0 +1,36 @@
+@startuml
+interface TemporalPeriod<T extends java.time.Temporal & Comparable<? super T>> {
+    T getFrom()
+    T getTo()
+    TemporalAmount between()
+    boolean isReverse()
+    boolean isSequential()
+    boolean isAfter(TemporalPeriod<T> other)
+    boolean isBefore(TemporalPeriod<T> other)
+    boolean contains(T point)
+    boolean isAtBorders(T point)
+    boolean isIntersect(TemporalPeriod<T> other)
+    boolean isSequentiallyWith(TemporalPeriod<T> other)
+    boolean isSequentiallyWith(TemporalPeriod<T> other, TemporalUnit step)
+    TemporalPeriod<T> combineWith(TemporalPeriod<T> other)
+    TemporalPeriod<T>[] split(T point)
+    Optional<? extends TemporalPeriod<T>> intersectionWith(TemporalPeriod<T> other)
+}
+
+class YearMonthPeriod<java.time.YearMonth>{
+
+}
+
+class DatePeriod<java.time.LocalDate>{
+
+}
+
+class DateTimePeriod<java.time.LocalDateTime>{
+
+}
+
+
+TemporalPeriod <|-- YearMonthPeriod
+TemporalPeriod <|-- DatePeriod
+TemporalPeriod <|-- DateTimePeriod
+@enduml
