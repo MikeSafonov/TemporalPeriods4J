@@ -139,13 +139,13 @@ JDK >= 1.8
 
 You can run unit tests using following command:
 
-    ./gradlew test
+    ./gradlew test -x signArchives
     
 ### Mutation tests
 
 You can run mutation tests using following command:
 
-    ./grdlew pitest
+    ./grdlew pitest -x signArchives
 
 You will be able to find pitest report in `build/reports/pitest/` folder.
 
