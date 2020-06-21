@@ -7,6 +7,7 @@ plugins {
 
 apply plugin: "java-library"
 apply plugin: "maven"
+apply plugin: "signing"
 
 
 group "com.github.mikesafonov"
@@ -38,6 +39,10 @@ artifacts {
     archives javadocJar
 }
 
+signing {
+    sign configurations.archives
+}
+
 jacoco {
     toolVersion = "0.8.3"
 }
@@ -64,6 +69,56 @@ dependencies{
     testImplementation "org.assertj:assertj-core:3.15.0"
 }
 
+// Build, sign, and upload
+uploadArchives {
+    repositories {
+        mavenDeployer {
+
+            // Sign POM
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            // Destination
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            // Add required metadata to POM
+            pom.project {
+                name "TemporalPeriods4j"
+                packaging "jar"
+                description "TemporalPeriods4j is a library providing temporal periods to extend java.time API"
+                url "https://github.com/MikeSafonov/TemporalPeriods4j"
+                organization {
+                    name "com.github.mikesafonov"
+                    url "https://github.com/MikeSafonov"
+                }
+                issueManagement {
+                    system "GitHub"
+                    url "https://github.com/MikeSafonov/TemporalPeriods4j/issues"
+                }
+                licenses {
+                    license {
+                        name "MIT"
+                        url "https://github.com/MikeSafonov/TemporalPeriods4j/blob/master/LICENSE"
+                        distribution "repo"
+                    }
+                }
+                scm {
+                    url "https://github.com/MikeSafonov/TemporalPeriods4j"
+                    connection "scm:git:git://github.com/MikeSafonov/TemporalPeriods4j.git"
+                    developerConnection "scm:git:ssh://git@github.com:MikeSafonov/TemporalPeriods4j.git"
+                }
+                developers {
+                    developer {
+                        name "Mike Safonov"
+                        organization "com.github.mikesafonov"
+                        organizationUrl "https://github.com/MikeSafonov"
+                    }
+                }
+            }
+        }
+    }
+}
 
 pitest {
     junit5PluginVersion = '0.12'
